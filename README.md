@@ -20,7 +20,7 @@ I recommend compiling ncurses from [source](ftp://ftp.gnu.org/pub/gnu/ncurses/)
 
 Or you can get them from your distribution
 
-	apt install libncurses5-dev 
+	sudo apt-get install libncurses5-dev 
 
 Then go into Snake folder and run
 
