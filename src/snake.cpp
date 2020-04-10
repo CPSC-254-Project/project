@@ -209,7 +209,7 @@ void proccesInput(WINDOW*, Snake&, int);
 int main()
 {
 	string name;
-	cout << "Hello World!";
+	cout << "Hello World!\n";
 	cout << "Enter your name: ";
 	cin >> name;
 	initscr();
