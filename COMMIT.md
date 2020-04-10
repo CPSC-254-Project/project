@@ -18,12 +18,12 @@
   
 	git config --global user.email “username@csu.fullerton.edu”
   
-  git config --global user.name “Your name”
+  	git config --global user.name “Your name”
   
-  git commit
+  	git commit
 
 ### Step 4: Push your files, type:
   
-  git push
+  	git push
 
 ### Then input your username and password of your Github’s account
