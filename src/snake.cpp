@@ -1,3 +1,5 @@
+#include <ncurses.h>
+
 #include <string>
 #include <cstring>
 #include <vector>
@@ -7,8 +9,6 @@
 #include <iostream>
 using namespace std;
 using std::fstream; using std::ifstream; using std::ofstream;
-
-#include <ncurses.h>
 
 #ifdef WIN32 ///For the sleep()
 #include <windows.h>	//Sleep(miliseconds);
@@ -208,15 +208,70 @@ void draw(WINDOW*, Snake&, char*, int, int);
 void proccesInput(WINDOW*, Snake&, int);
 int main()
 {
-	string name;
-	cout << "Hello World!\n";
-	cout << "Enter your name: ";
-	cin >> name;
 	initscr();
-	noecho();
+	//noecho();
 	cbreak();
+
 	int x,y;
 	getmaxyx(stdscr, y, x);
+
+	// Adding menu for the game from here
+	WINDOW *menu = newwin(y, x, 0, 0);
+	box(menu, 0, 0);
+	refresh();
+	wrefresh(menu);
+	keypad(menu, true);
+
+	mvwprintw(menu, 1, 18, "****************************************");
+	mvwprintw(menu, 2, 18, "*    WELCOME TO OPEN-SOURCE PROJECT    *");
+	mvwprintw(menu, 3, 18, "*              SNAKE GAME              *");
+	mvwprintw(menu, 4, 18, "****************************************");
+	mvwprintw(menu, 6, 18, " ------------- Main Menu -------------- ");
+
+	string choices[3] = {"1. Guest Mode", "2. User Mode", "3. Quit"};
+	int choice;
+	int hightlight = 0;
+
+	while (true) {
+		for (int i = 0; i < 3; i++) {
+			if (i == hightlight) {
+				wattron(menu, A_REVERSE);
+			}
+			mvwprintw(menu, i + 8, 25, choices[i].c_str());
+			wattroff(menu, A_REVERSE);
+		}
+		choice = wgetch(menu);
+
+		switch (choice) {
+			case KEY_UP: {
+				hightlight--;
+				if (hightlight == -1) {
+					hightlight = 2;
+				}
+			}
+			break;
+			case KEY_DOWN: {
+				hightlight++;
+				if (hightlight == 3) {
+					hightlight = 0;
+				}
+			}
+			break;
+		}
+
+		if (choice == 10) {
+			if (hightlight == 0) {
+				break;
+			} else if (hightlight == 1) {
+				mvwprintw(menu, 12, 25, "You pick user mode");
+			} else {
+				delwin(menu);
+				endwin();
+				return 0;
+			}
+		}
+	} // To here
+
 	int best = getBest();
 	//render frame
 	WINDOW *win = newwin(y-3, x, 1, 0); //height, width, startY, startX
@@ -265,6 +320,8 @@ int main()
 	delwin(score);
 	delwin(win);
 	endwin();
+	sleep(150);
+	return 0;
 }
 std::string getFile()
 {
@@ -350,7 +407,7 @@ void draw(WINDOW* win, Snake& snake, char* table, int height, int width)
 					if(d==2)ch = ACS_DARROW;
 					if(d==3)ch = ACS_LARROW;
 					#else
-					ch = '#';
+					ch = '@';
 					#endif
 					break;
 				case 'b':
